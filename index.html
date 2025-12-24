@@ -147,11 +147,11 @@
       const bottom = H * 0.78;
       const height = bottom - top;
 
-      const layers = 6;
-      const layerH = height * 0.14;
-      const overlap = layerH * 0.35;
-      const baseW = 70;
-      const growW = 55;
+      const layers = 7;
+      const layerH = height * 0.17;
+      const overlap = layerH * 0.42;
+      const baseW = 45;
+      const growW = 42;
 
       ctx.save();
       for (let i = 0; i < layers; i++) {
@@ -168,9 +168,6 @@
         ctx.fillStyle = `rgba(20, 120, 70, ${0.92 - i * 0.06})`;
         ctx.fill();
       }
-
-      ctx.fillStyle = "rgba(120,80,40,0.95)";
-      ctx.fillRect(cx - 28, bottom, 56, 92);
 
       ctx.fillStyle = "rgba(255,255,255,0.10)";
       ctx.beginPath();
