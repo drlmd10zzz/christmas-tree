@@ -199,7 +199,7 @@
         if (y < yTop || y > yBottom) return 0;
         const layerW = baseW + idx * growW;
         const t = (y - yTop) / (yBottom - yTop);
-        return layerW * t;
+        return layerW * (0.25 + 0.75 * t);
       }
 
       let tries = 0;
@@ -306,11 +306,11 @@
       const bottom = H * 0.78;
       ctx.save();
       ctx.fillStyle = "rgba(255,255,255,0.14)";
-      ctx.fillRect(W*0.32, bottom + 150, W*0.36, 54);
+      ctx.fillRect(W*0.32, bottom + 95, W*0.36, 54);
       ctx.fillStyle = "rgba(255,255,255,0.92)";
       ctx.font = "24px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText(`To ${GIRL_NAME}`, cx, bottom + 185);
+      ctx.fillText(`To ${GIRL_NAME}`, cx, bottom + 130);
       ctx.restore();
     }
 
