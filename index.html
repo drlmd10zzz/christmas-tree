@@ -142,40 +142,78 @@
     }
 
     function drawTreeBody() {
-      const cx = W * 0.5;
-      const top = H * 0.18;
-      const bottom = H * 0.78;
-      const height = bottom - top;
+  const cx = W * 0.5;
+  const top = H * 0.17;
+  const bottom = H * 0.77;
+  const height = bottom - top;
 
-      const layers = 7;
-      const layerH = height * 0.17;
-      const overlap = layerH * 0.42;
-      const baseW = 45;
-      const growW = 42;
+  const layers = 6;
+  const layerH = height * 0.16;
+  const overlap = layerH * 0.42;
 
-      ctx.save();
-      for (let i = 0; i < layers; i++) {
-        const yTop = top + i * (layerH - overlap);
-        const yBottom = yTop + layerH;
-        const layerW = baseW + i * growW;
+  const topW = 55;
+  const growW = 62;
 
-        ctx.beginPath();
-        ctx.moveTo(cx, yTop);
-        ctx.lineTo(cx - layerW, yBottom);
-        ctx.lineTo(cx + layerW, yBottom);
-        ctx.closePath();
+  function buildCanopyPath() {
+    ctx.beginPath();
+    for (let i = 0; i < layers; i++) {
+      const yTop = top + i * (layerH - overlap);
+      const yBot = yTop + layerH;
+      const w = topW + i * growW;
 
-        ctx.fillStyle = `rgba(20, 120, 70, ${0.92 - i * 0.06})`;
-        ctx.fill();
-      }
-
-      ctx.fillStyle = "rgba(255,255,255,0.10)";
-      ctx.beginPath();
-      ctx.ellipse(cx, bottom + 115, 320, 85, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
+      ctx.moveTo(cx, yTop);
+      ctx.lineTo(cx - w, yBot);
+      ctx.lineTo(cx + w, yBot);
+      ctx.closePath();
     }
+  }
+
+  ctx.save();
+
+  const grad = ctx.createLinearGradient(0, top, 0, bottom);
+  grad.addColorStop(0.00, "rgba(18, 115, 85, 0.95)");
+  grad.addColorStop(0.55, "rgba(16, 140, 92, 0.95)");
+  grad.addColorStop(1.00, "rgba(10, 95, 70, 0.95)");
+
+  buildCanopyPath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.globalAlpha = 0.14;
+  ctx.fillStyle = "rgba(255,255,255,1)";
+  for (let i = 0; i < layers; i++) {
+    const yTop = top + i * (layerH - overlap);
+    const yBot = yTop + layerH;
+    const w = topW + i * growW;
+
+    ctx.beginPath();
+    ctx.moveTo(cx, yTop);
+    ctx.lineTo(cx - w, yBot);
+    ctx.lineTo(cx + w, yBot);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+
+  const trunkH = height * 0.18;
+  const trunkW = 56;
+  const trunkY = bottom + height * 0.02;
+
+  const wood = ctx.createLinearGradient(cx - trunkW, 0, cx + trunkW, 0);
+  wood.addColorStop(0.0, "rgba(110, 70, 35, 0.95)");
+  wood.addColorStop(0.5, "rgba(140, 92, 45, 0.95)");
+  wood.addColorStop(1.0, "rgba(95, 60, 30, 0.95)");
+
+  ctx.fillStyle = wood;
+  ctx.fillRect(cx - trunkW / 2, trunkY, trunkW, trunkH);
+
+  ctx.fillStyle = "rgba(255,255,255,0.10)";
+  ctx.beginPath();
+  ctx.ellipse(cx, trunkY + trunkH + 45, 320, 85, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.restore();
+}
 
     function buildLights() {
       lights.length = 0;
@@ -241,21 +279,54 @@
     }
 
     function drawLights(t) {
-      ctx.save();
-      ctx.globalCompositeOperation = "lighter";
-      for (const L of lights) {
-        const on = Math.sin(t * 0.12 + L.phase) > 0;
-        const alpha = on ? 0.95 : 0.25;
-        ctx.beginPath();
-        ctx.arc(L.x, L.y, L.s, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${L.hue}, 90%, 60%, ${alpha})`;
-        ctx.shadowColor = `hsla(${L.hue}, 90%, 60%, ${alpha})`;
-        ctx.shadowBlur = on ? 14 : 3;
-        ctx.fill();
-      }
-      ctx.globalCompositeOperation = "source-over";
-      ctx.restore();
+  const cx = W * 0.5;
+  const top = H * 0.17;
+  const bottom = H * 0.77;
+  const height = bottom - top;
+
+  const layers = 6;
+  const layerH = height * 0.16;
+  const overlap = layerH * 0.42;
+
+  const topW = 55;
+  const growW = 62;
+
+  function clipCanopy() {
+    ctx.beginPath();
+    for (let i = 0; i < layers; i++) {
+      const yTop = top + i * (layerH - overlap);
+      const yBot = yTop + layerH;
+      const w = topW + i * growW;
+
+      ctx.moveTo(cx, yTop);
+      ctx.lineTo(cx - w, yBot);
+      ctx.lineTo(cx + w, yBot);
+      ctx.closePath();
     }
+    ctx.clip();
+  }
+
+  ctx.save();
+  clipCanopy();
+
+  ctx.globalCompositeOperation = "lighter";
+
+  for (const L of lights) {
+    const on = Math.sin(t * 0.12 + L.phase) > 0;
+    const alpha = on ? 0.95 : 0.22;
+
+    ctx.beginPath();
+    ctx.arc(L.x, L.y, L.s, 0, Math.PI * 2);
+    ctx.fillStyle = `hsla(${L.hue}, 90%, 60%, ${alpha})`;
+    ctx.shadowColor = `hsla(${L.hue}, 90%, 60%, ${alpha})`;
+    ctx.shadowBlur = on ? 16 : 4;
+    ctx.fill();
+  }
+
+  ctx.globalCompositeOperation = "source-over";
+  ctx.restore();
+}
+
 
     function drawHearts() {
       ctx.save();
