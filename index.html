@@ -150,12 +150,12 @@
       const bottom = H * 0.60;
       const height = bottom - top;
 
-      const layers = 6;
-      const layerH = height * 0.22;
-      const overlap = layerH * 0.58;
+      const layers = 5;
+      const layerH = height * 0.26;
+      const overlap = layerH * 0.48;
 
-      const topW = W * 0.075;
-      const growW = W * 0.085;
+      const topW = W * 0.045;
+      const growW = W * 0.060;
 
       function canopyPath(){
         ctx.beginPath();
@@ -196,9 +196,10 @@
       }
       ctx.globalAlpha = 1;
 
-      const trunkH = height * 0.22;
       const trunkW = W * 0.075;
-      const trunkTop = bottom - trunkH * 0.15;
+      const trunkH = height * 0.16;
+      const trunkTop = bottom - trunkH * 0.05;
+
 
       const wood = ctx.createLinearGradient(cx - trunkW, 0, cx + trunkW, 0);
       wood.addColorStop(0.0, "rgba(110, 70, 35, 0.95)");
@@ -225,12 +226,13 @@
       const bottom = H * 0.60;
       const height = bottom - top;
 
-      const layers = 6;
-      const layerH = height * 0.22;
-      const overlap = layerH * 0.58;
+      const layers = 5;
+const layerH = height * 0.26;
+const overlap = layerH * 0.48;
 
-      const topW = W * 0.075;
-      const growW = W * 0.085;
+const topW = W * 0.045;
+const growW = W * 0.060;
+
 
       function halfWidthAtY(y){
         const step = (layerH - overlap);
@@ -293,12 +295,13 @@
       const bottom = H * 0.60;
       const height = bottom - top;
 
-      const layers = 6;
-      const layerH = height * 0.22;
-      const overlap = layerH * 0.58;
+      const layers = 5;
+const layerH = height * 0.26;
+const overlap = layerH * 0.48;
 
-      const topW = W * 0.075;
-      const growW = W * 0.085;
+const topW = W * 0.045;
+const growW = W * 0.060;
+
 
       function clipCanopy(){
         ctx.beginPath();
